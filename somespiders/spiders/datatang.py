@@ -18,6 +18,7 @@ class DatatangSpider(scrapy.Spider):
     数据堂爬虫
     '''
     name = 'datatang'
+    """
     start_urls = [
         'http://www.datatang.com/data/list/r020-t01-la01-p1',
         'http://www.datatang.com/data/list/r020-t02-la01-p1',
@@ -30,9 +31,8 @@ class DatatangSpider(scrapy.Spider):
     ]
     """
     start_urls = [
-        'http://www.datatang.com/data/list/r020-t01-la01-p1',
+        'http://www.datatang.com/data/list/r020-t02-la01-p1',
     ]
-    """
 
     def parse(self, response):
         pq = PyQuery(response.body)
@@ -56,7 +56,7 @@ class DatatangSpider(scrapy.Spider):
         meta = {}
         meta['data_type'] = data_type
         meta['lang'] = lang
-        for i in xrange(int(max_url)):
+        for i in xrange(1, int(max_url) + 1):
             yield scrapy.Request(
                 response.url[:-1]+str(i),
                 callback=self.secondparse,
@@ -69,13 +69,12 @@ class DatatangSpider(scrapy.Spider):
             yield scrapy.Request(
                 base_url+i.attrib['href'],
                 callback=self.thirdparse,
-                meta=response.meta,
+                meta=response.request.meta,
             )
 
     def thirdparse(self, response):
         a, b, c, d, e, f, g, h = html_clean(response.body_as_unicode())
         if not a:
-            print('************************************************')
             return
         item = TestItem()
         item['title'] = a
@@ -87,8 +86,8 @@ class DatatangSpider(scrapy.Spider):
         item['preview'] = g
         item['data_category'] = h
 
-        item['lang'] = response.meta['lang']
-        item['data_type'] = response.meta['data_type']
+        item['lang'] = response.request.meta['lang']
+        item['data_type'] = response.request.meta['data_type']
         item['source'] = u'数据堂'
         item['url'] = response.url
         yield item
