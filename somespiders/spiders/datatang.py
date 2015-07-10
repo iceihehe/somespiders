@@ -18,7 +18,6 @@ class DatatangSpider(scrapy.Spider):
     数据堂爬虫
     '''
     name = 'datatang'
-    """
     start_urls = [
         'http://www.datatang.com/data/list/r020-t01-la01-p1',
         'http://www.datatang.com/data/list/r020-t02-la01-p1',
@@ -33,6 +32,7 @@ class DatatangSpider(scrapy.Spider):
     start_urls = [
         'http://www.datatang.com/data/list/r020-t01-la01-p1',
     ]
+    """
 
     def parse(self, response):
         pq = PyQuery(response.body)
