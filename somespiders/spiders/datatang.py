@@ -42,9 +42,9 @@ class DatatangSpider(scrapy.Spider):
         except:
             max_url = '1'
         if 'la01' in response.url:
-            lang = 'chinese'
+            lang = u'中文'
         else:
-            lang = 'english'
+            lang = u'英文'
         if 't01' in response.url:
             data_type = 'text'
         elif 't02' in response.url:
