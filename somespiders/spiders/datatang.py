@@ -42,9 +42,9 @@ class DatatangSpider(scrapy.Spider):
         except:
             max_url = '1'
         if 'la01' in response.url:
-            lang = u'中文'
+            lang = u'chinese'
         else:
-            lang = u'英文'
+            lang = u'english'
         if 't01' in response.url:
             data_type = 'text'
         elif 't02' in response.url:
@@ -53,12 +53,14 @@ class DatatangSpider(scrapy.Spider):
             data_type = 'video'
         else:
             data_type = 'image'
-        self.data_type = data_type
-        self.lang = lang
+        meta = {}
+        meta['data_type'] = data_type
+        meta['lang'] = lang
         for i in xrange(int(max_url)):
             yield scrapy.Request(
                 response.url[:-1]+str(i),
-                callback=self.secondparse
+                callback=self.secondparse,
+                meta=meta,
             )
 
     def secondparse(self, response):
@@ -66,7 +68,8 @@ class DatatangSpider(scrapy.Spider):
         for i in pq('div.con_box')('h5')('a'):
             yield scrapy.Request(
                 base_url+i.attrib['href'],
-                callback=self.thirdparse
+                callback=self.thirdparse,
+                meta=response.meta,
             )
 
     def thirdparse(self, response):
@@ -84,8 +87,8 @@ class DatatangSpider(scrapy.Spider):
         item['preview'] = g
         item['data_category'] = h
 
-        item['lang'] = self.lang
-        item['data_type'] = self.data_type
+        item['lang'] = response.meta['lang']
+        item['data_type'] = response.meta['data_type']
         item['source'] = u'数据堂'
         item['url'] = response.url
         yield item

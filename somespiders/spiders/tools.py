@@ -60,11 +60,11 @@ def html_clean(html):
     # 数据标价
     price = d('h2.fc_red').text()[5:].split()
     if not price:
-        price = u'免费'
+        price = 'free'
     elif u'积分' in price:
-        price = u'积分'
+        price = 'score'
     else:
-        price = u'付费'
+        price = 'pay'
     # 数据预览(链接)
     imgs = []
     ss = d('#details_1')('img')
