@@ -55,7 +55,7 @@ def html_clean(html):
         if u'下载' in i.text:
             download = i.text.split()[1]
     # 数据大小
-    ss = d('h2.fs14').text()[5:]
+    ss = d('h2.fs14.fc_gray6').text()[5:]
     capacity = capacity_clean(ss)
     # 数据标价
     price = d('h2.fc_red').text()[5:].split()
